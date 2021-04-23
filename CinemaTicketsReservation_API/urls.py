@@ -22,4 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
      #1
     path('django/jsonresponsenomodel/', views.no_rest_no_model),
+    #2 
+     path('django/jsonresponsefrommmodel/', views.no_rest_from_model),
+       #3.1 GET POST from rest framework function based view @api_view
+    path('rest/fbv/', views.FBV_list),
 ]
