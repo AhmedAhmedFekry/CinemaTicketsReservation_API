@@ -33,8 +33,6 @@ def no_rest_from_model(self):
 
 #3 Function based views
 #3.1 GET POST
-
-
 @api_view(['GET', 'POST'])
 def FBV_list(request):
 
@@ -48,3 +46,25 @@ def FBV_list(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+#3.2 GET PUT DELETE
+@api_view(['GET', 'PUT', "DELETE"])
+def FBV_pk(request, pk):
+    try:
+        guest = Guest.objects.get(pk=pk)
+    except Guest.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        serilizer = GuestSerializer(guest)
+        return Response(serilizer.data)
+    elif request.method == "PUT":
+        serilizer = GuestSerializer(guest, data=request.data)
+        if serilizer.is_valid():
+            serilizer.save()
+            return Response(serilizer.data)
+        return Response(serilizer.errors, status=status.HTTP_404_NOT_FOUND)
+    elif request.method == "DELETE":
+        guest.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
