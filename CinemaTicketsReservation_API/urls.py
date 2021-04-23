@@ -28,4 +28,12 @@ urlpatterns = [
     path('rest/fbv/', views.FBV_list),
     #3.2 GET PUT DELETE from rest framework function based view @api_view
     path('rest/fbv/<int:pk>', views.FBV_pk),
+    #4.1 GET POST from rest framework class based view APIView
+    path('rest/cbv/', views.CBV_List.as_view()),
+
+    # #4.2 GET PUT DELETE from rest framework class based view APIView
+    # path('rest/cbv/<int:pk>', views.CBV_pk.as_view()),
+
+    # #5.1 GET POST from rest framework class based view mixins
+    # path('rest/mixins/', views.mixins_list.as_view()),
 ]

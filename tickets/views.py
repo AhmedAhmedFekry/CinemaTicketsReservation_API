@@ -5,6 +5,7 @@ from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 
 
 #1 without REST and no model query FBV
@@ -68,3 +69,62 @@ def FBV_pk(request, pk):
     elif request.method == "DELETE":
         guest.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# class based view
+## list and create == get and post
+
+
+class CBV_List(APIView):
+    def get(self, request):
+        guests = Guest.objects.all()
+        serilizer = GuestSerializer(guests, many=True)
+        return Response(serilizer.data)
+
+    def post(self, request):
+        serilizer = GuestSerializer(data=request.data)
+        if serilizer.is_valid():
+            serilizer.save()
+            return Response(serilizer.data, status=status.HTTP_201_CREATED)
+        return Response(serilizer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+#4.2 GET PUT DELETE cloass based views -- pk
+class CBV_pk(APIView):
+    def get_object(self, pk):
+        try:
+            return Guest.objects.get(pk=pk)
+        except Guest.DoesNotExists:
+            raise Http404
+
+    def get(self, request, pk):
+        guest = self.get_object(pk)
+        serializer = GuestSerializer(guest)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        guest = self.get_object(pk)
+        serializer = GuestSerializer(guest, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        guest = self.get_object(pk)
+        guest.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#5 Mixins
+# #5.1 mixins list
+# class mixins_list(mixins.ListModelMixin, mixins.CreateModelMixin,
+#                   generics.GenericAPIView):
+#     queryset = Guest.objects.all()
+#     serializer_class = GuestSerializer
+
+#     def get(self, request):
+#         return self.list(request)
+
+#     def post(self, request):
+#         return self.create(request)
