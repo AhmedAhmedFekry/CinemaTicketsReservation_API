@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Guest, Reservation, Movie
 from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics, mixins, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
@@ -114,6 +114,20 @@ class CBV_pk(APIView):
         guest = self.get_object(pk)
         guest.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+## 5 Mixins
+########### 5.1 Mixins list
+class Mixin_list(mixins.ListModelMixin, mixins.CreateModelMixin,
+                 generics.GenericAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
 
 
 #5 Mixins
