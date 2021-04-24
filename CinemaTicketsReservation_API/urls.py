@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from tickets import views
 
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register('guests', views.viewsets_guest)
+router.register('movies', views.viewsets_movie)
+router.register('reservations', views.viewsets_reservation)
 urlpatterns = [
     path('admin/', admin.site.urls),
     #1
@@ -44,4 +49,6 @@ urlpatterns = [
 
     #6.2 GET PUT DELETE from rest framework class based view generics
     path('rest/generics/<int:pk>', views.Generics_pk.as_view()),
+    #7 Viewsets
+    path('rest/viewsets/', include(router.urls)),
 ]

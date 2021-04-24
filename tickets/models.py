@@ -6,9 +6,8 @@ from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django.contrib.auth.models import User
 
+# Guest -- Movie -- Reservation
 
-
-# Guest -- Movie -- Reservation 
 
 class Movie(models.Model):
     hall = models.CharField(max_length=10)
@@ -22,5 +21,9 @@ class Guest(models.Model):
 
 
 class Reservation(models.Model):
-    guest = models.ForeignKey(Guest, related_name='reservation', on_delete=models.CASCADE )
-    movie = models.ForeignKey(Movie, related_name='reservation', on_delete=models.CASCADE )
+    guest = models.ForeignKey(Guest,
+                              related_name='reservation',
+                              on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie,
+                              related_name='reservation',
+                              on_delete=models.CASCADE)

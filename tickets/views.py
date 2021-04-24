@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from .models import Guest, Reservation, Movie
 from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer
 from rest_framework.response import Response
-from rest_framework import status, generics, mixins, viewsets
+from rest_framework import status, generics, mixins, viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
@@ -157,3 +157,21 @@ class Generics_list(generics.ListCreateAPIView):
 class Generics_pk(generics.RetrieveUpdateDestroyAPIView):
     queryset = Guest.objects.all()
     serializer_class = GuestSerializer
+
+
+#7 viewsets
+class viewsets_guest(viewsets.ModelViewSet):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializer
+
+
+class viewsets_movie(viewsets.ModelViewSet):
+    queryset = Movie.objects.all()
+    serializer_class = MovieSerializer
+    filter_backend = [filters.SearchFilter]
+    search_fields = ['movie']
+
+
+class viewsets_reservation(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = Reservation
