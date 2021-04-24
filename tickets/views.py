@@ -130,15 +130,29 @@ class Mixin_list(mixins.ListModelMixin, mixins.CreateModelMixin,
         return self.create(request)
 
 
-#5 Mixins
-# #5.1 mixins list
-# class mixins_list(mixins.ListModelMixin, mixins.CreateModelMixin,
-#                   generics.GenericAPIView):
+# 5.2 mixins get put delete
+class Mixins_pk(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Guest.objects.all()
+    serializer_class = GuestSerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request)
+
+    def put(self, request, pk):
+        return self.update(request)
+
+    def delete(self, request, pk):
+        return self.destroy(request)
+
+
+#5.2 mixins get put delete
+# class mixins_pk(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
 #     queryset = Guest.objects.all()
 #     serializer_class = GuestSerializer
-
-#     def get(self, request):
-#         return self.list(request)
-
-#     def post(self, request):
-#         return self.create(request)
+#     def get(self, request, pk):
+#         return self.retrieve(request)
+#     def put(self, request, pk):
+#         return self.update(request)
+#     def delete(self, request, pk):
+#         return self.destroy(request)
