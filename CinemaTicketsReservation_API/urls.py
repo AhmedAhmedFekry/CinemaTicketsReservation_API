@@ -41,4 +41,7 @@ urlpatterns = [
 
     #6.1 GET POST from rest framework class based view generics
     path('rest/generics/', views.Generics_list.as_view()),
+
+    #6.2 GET PUT DELETE from rest framework class based view generics
+    path('rest/generics/<int:pk>', views.Generics_pk.as_view()),
 ]
