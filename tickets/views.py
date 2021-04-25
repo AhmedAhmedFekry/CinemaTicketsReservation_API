@@ -1,13 +1,14 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Guest, Reservation, Movie
-from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer
+from .models import Guest, Reservation, Movie, Post
+from .serializers import GuestSerializer, MovieSerializer, ReservationSerializer, PostSerializer
 from rest_framework.response import Response
 from rest_framework import status, generics, mixins, viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsAuthorOrReadOnly
 
 
 #1 without REST and no model query FBV
@@ -217,3 +218,10 @@ def new_reservation(request):
     reservation.save()
 
     return Response(status=status.HTTP_201_CREATED)
+
+
+#10 post author editor
+class Post_pk(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthorOrReadOnly]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer

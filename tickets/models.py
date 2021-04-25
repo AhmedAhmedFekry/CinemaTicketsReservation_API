@@ -29,6 +29,12 @@ class Reservation(models.Model):
                               on_delete=models.CASCADE)
 
 
+class Post(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    body = models.TextField()
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def TokenCreate(sender, instance, created, **kwargs):
     if created:
