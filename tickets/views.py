@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status, generics, mixins, viewsets, filters
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework.authentication import BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 #1 without REST and no model query FBV
@@ -151,12 +153,20 @@ class Mixins_pk(mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
 class Generics_list(generics.ListCreateAPIView):
     queryset = Guest.objects.all()
     serializer_class = GuestSerializer
+    authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
+
+
+# authentication_classes = [TokenAuthentication]
+#
 
 
 # 6.2 get put and delete
 class Generics_pk(generics.RetrieveUpdateDestroyAPIView):
     queryset = Guest.objects.all()
     serializer_class = GuestSerializer
+    authentication_classes = [TokenAuthentication]
+    # permission_classes = [IsAuthenticated]
 
 
 #7 viewsets
@@ -186,3 +196,24 @@ def find_movie(request):
     )
     serializer = MovieSerializer(movies, many=True)
     return Response(serializer.data)
+
+
+#9 create new reservation
+@api_view(['POST'])
+def new_reservation(request):
+
+    movie = Movie.objects.get(
+        hall=request.data['hall'],
+        movie=request.data['movie'],
+    )
+    guest = Guest()
+    guest.name = request.data['name']
+    guest.mobile = request.data['mobile']
+    guest.save()
+
+    reservation = Reservation()
+    reservation.guest = guest
+    reservation.movie = movie
+    reservation.save()
+
+    return Response(status=status.HTTP_201_CREATED)
