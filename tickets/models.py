@@ -27,3 +27,9 @@ class Reservation(models.Model):
     movie = models.ForeignKey(Movie,
                               related_name='reservation',
                               on_delete=models.CASCADE)
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def TokenCreate(sender, instance, created, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
